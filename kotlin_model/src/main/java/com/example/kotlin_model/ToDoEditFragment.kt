@@ -18,7 +18,7 @@ import java.util.*
 class ToDoEditFragment : Fragment() {
 
     var todo: Todo? = null
-    val dbUtil = DBUtil(context)
+    var dbUtil: DBUtil? = null
 
     companion object {
 
@@ -41,12 +41,13 @@ class ToDoEditFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        dbUtil = DBUtil(context)
         if (arguments != null && arguments!!.containsKey(TODO_ID_KEY)) {
             val todoId = arguments!!.getString(TODO_ID_KEY)
-            val cursor = dbUtil.getDbInstants(context).rawQuery("select * from todo_list where id = $todoId", null)
+            val cursor = dbUtil?.getDbInstants(context)?.rawQuery("select * from todo_list where id = $todoId", null)
 
             if (cursor != null) {
+                // 27050
                 cursor.moveToFirst()
                 todo?.id = cursor.getString(1)
                 todo?.title = cursor.getString(2)
@@ -75,7 +76,7 @@ class ToDoEditFragment : Fragment() {
                 }
                 val content = editText {
                     id = R.id.todo_content
-                    height = 400
+                    height = wrapContent
                     maxLines = 4
                     hintResource = R.string.content_hint
                 }
@@ -94,7 +95,8 @@ class ToDoEditFragment : Fragment() {
 
         val todoTitle = title.text
         val todoContent = content.text
-        dbUtil.getDbInstants(context).execSQL("insert into todo_list values(" + UUID.randomUUID().toString() + "," + todoTitle + ", " + todoContent + ")")
+        val sql = "insert into todo (id, title, content) values('" + UUID.randomUUID().toString() + "','" + todoTitle + "', '" + todoContent + "')"
+        dbUtil?.getDbInstants(context)?.execSQL(sql)
         activity?.supportFragmentManager?.popBackStack()
     }
 
