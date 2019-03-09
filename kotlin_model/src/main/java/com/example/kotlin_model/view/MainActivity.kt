@@ -1,30 +1,45 @@
-package com.example.kotlin_model
+package com.example.kotlin_model.view
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import com.example.kotlin_model.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        fab.setOnClickListener {
+            //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
 
             val todoEditFragment = ToDoEditFragment()
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.content_main, todoEditFragment, todoEditFragment.tag)
-                    .addToBackStack(todoEditFragment.tag)
+                    .replace(R.id.content_main, todoEditFragment, todoEditFragment.javaClass.simpleName)
+                    .addToBackStack(todoEditFragment.javaClass.simpleName)
                     .commit()
+
+            hindFab()
         }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        val todoListFragment = TodoListFragment()
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.content_main, todoListFragment, todoListFragment.javaClass.simpleName)
+                .addToBackStack(todoListFragment.javaClass.simpleName)
+                .commit()
+    }
+
+    open fun hindFab() {
+        fab.hide()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

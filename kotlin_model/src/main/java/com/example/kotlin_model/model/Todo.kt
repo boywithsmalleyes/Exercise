@@ -1,4 +1,4 @@
-package com.example.kotlin_model
+package com.example.kotlin_model.model
 
 open class Todo {
     open var id:String = "-1"

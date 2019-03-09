@@ -1,17 +1,19 @@
-package com.example.kotlin_model
+package com.example.kotlin_model.view
 
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import com.example.kotlin_model.R
 import com.example.kotlin_model.db.DBUtil
+import com.example.kotlin_model.model.Todo
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.UI
-import org.jetbrains.anko.support.v4.act
 import org.jetbrains.anko.support.v4.find
 import java.util.*
 
@@ -25,9 +27,9 @@ class ToDoEditFragment : Fragment() {
         val TODO_ID_KEY: String = "todo_id_key"
 
         fun newInstance(id: String): ToDoEditFragment {
-            var args: Bundle = Bundle()
+            val args: Bundle = Bundle()
             args.putString(TODO_ID_KEY, id)
-            var toDoEditFragment: ToDoEditFragment = newInstance()
+            val toDoEditFragment: ToDoEditFragment = newInstance()
             toDoEditFragment.arguments = args
             return toDoEditFragment
         }
@@ -44,7 +46,7 @@ class ToDoEditFragment : Fragment() {
         dbUtil = DBUtil(context)
         if (arguments != null && arguments!!.containsKey(TODO_ID_KEY)) {
             val todoId = arguments!!.getString(TODO_ID_KEY)
-            val cursor = dbUtil?.getDbInstants(context)?.rawQuery("select * from todo_list where id = $todoId", null)
+            val cursor = dbUtil?.getDbInstants(context)?.rawQuery("select * from todo where id = $todoId", null)
 
             if (cursor != null) {
                 // 27050
@@ -69,6 +71,7 @@ class ToDoEditFragment : Fragment() {
         return UI {
             verticalLayout {
                 padding = dip(30)
+                gravity = Gravity.CENTER
                 val title = editText {
                     id = R.id.todo_title
                     hintResource = R.string.title_hint
@@ -76,7 +79,6 @@ class ToDoEditFragment : Fragment() {
                 }
                 val content = editText {
                     id = R.id.todo_content
-                    height = wrapContent
                     maxLines = 4
                     hintResource = R.string.content_hint
                 }
@@ -100,4 +102,9 @@ class ToDoEditFragment : Fragment() {
         activity?.supportFragmentManager?.popBackStack()
     }
 
+
+    override fun onDestroy() {
+        dbUtil?.closeDb()
+        super.onDestroy()
+    }
 }
