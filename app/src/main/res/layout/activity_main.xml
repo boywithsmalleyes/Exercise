@@ -23,4 +23,18 @@
         android:onClick="clickMe"
         android:visibility="visible"
         android:text="click me" />
+
+
+    <!--<org.xwalk.core.XWalkView-->
+        <!--android:id="@+id/mv_load"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</org.xwalk.core.XWalkView>-->
+
+
+
+    <WebView
+        android:id="@+id/mv_load"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>
